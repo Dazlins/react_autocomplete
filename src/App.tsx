@@ -31,14 +31,14 @@ export const App: React.FC<Props> = ({ debounceDelay = 300, onSelected }) => {
       return peopleFromServer;
     }
 
-    const filteredArr = peopleFromServer.filter(person =>
+    return peopleFromServer.filter(person =>
       person.name.toLowerCase().includes(debouncedQuery.toLowerCase()),
     );
-
-    setError(filteredArr.length === 0);
-
-    return filteredArr;
   }, [debouncedQuery]);
+
+  useEffect(() => {
+    setError(filteredPeople.length === 0);
+  }, [filteredPeople]);
 
   const searchByName = (event: React.ChangeEvent<HTMLInputElement>) => {
     const searchValue = event.target.value;
@@ -92,7 +92,7 @@ export const App: React.FC<Props> = ({ debounceDelay = 300, onSelected }) => {
                 }
               }}
               onBlur={() => {
-                setTimeout(() => setIsDropdownActive(false), debounceDelay);
+                setIsDropdownActive(false);
               }}
             />
           </div>
@@ -104,7 +104,7 @@ export const App: React.FC<Props> = ({ debounceDelay = 300, onSelected }) => {
                   className="dropdown-item"
                   data-cy="suggestion-item"
                   key={person.slug}
-                  onClick={() => handlePersonClick(person)}
+                  onMouseDown={() => handlePersonClick(person)}
                 >
                   <p className="has-text-link">{person.name}</p>
                 </div>
